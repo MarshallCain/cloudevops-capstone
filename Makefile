@@ -7,7 +7,7 @@
 
 setup:
 	# Create python virtualenv & source it
-	# source ~/.devops/bin/activate
+	# source ~/.devops/bin/capstone
 	python3 -m venv ~/.capstone
 
 install:
@@ -22,6 +22,7 @@ test:
 	# Additional, optional, tests could go here
 	#python -m pytest -vv --cov=myrepolib tests/*.py
 	#python -m pytest --nbval notebook.ipynb
+	python testflask.py
 
 lint:
 	# See local hadolint install instructions:   https://github.com/hadolint/hadolint
