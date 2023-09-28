@@ -20,6 +20,8 @@ jobs:
           name: install dependencies
           command: |
             ls -la
+            whoami
+            pwd
             make setup
             source ~/.capstone/bin/activate
             make install
