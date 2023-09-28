@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-sample-capstone-deployment
+  namespace: eks-sample-app
+  labels:
+    app: eks-sample-capstone-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eks-sample-capstone-app
+  template:
+    metadata:
+      labels:
+        app: eks-sample-capstone-app
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+      containers:
+      - name: kushcapstone-app
+        image: kushalsabharwal/kushcapstone:latest
+        ports:
+        - name: http
+          containerPort: 9090
+        imagePullPolicy: IfNotPresent
+      nodeSelector:
+        kubernetes.io/os: linux
+

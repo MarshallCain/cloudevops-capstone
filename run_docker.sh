@@ -12,4 +12,4 @@ docker image ls
 
 # Step 3: 
 # Run flask app
-docker run -p 12001:9090 kushcapstone
+docker run -d -p 12001:9090 kushcapstone
