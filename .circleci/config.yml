@@ -42,30 +42,61 @@ jobs:
             source ~/.capstone/bin/activate
             make test
 
-  build_docker_image:
+  build_and_push_docker_image_to_ecr:
     docker:
       - image: cimg/python:3.10.12
     working_directory: ~/repo
     steps:
       - checkout
+      # Install AWS CLI for pushing the image to ECR
+      - run:
+          name: Install AWS CLI v2
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
       # Setup remote Docker environment
       - setup_remote_docker:
           docker_layer_caching: true
+
       # Build Docker Image
       - run:
           name: Build Docker Image
           command: |
             docker build -t kushcapstone:${CIRCLE_WORKFLOW_ID:0:7} .
+
       # List Built Docker Image
       - run:
           name: Build Docker Image
           command: |
             docker image ls
 
+      # Authenticate Docker with AWS ECR
+      - run:
+          name: Authenticate with ECR
+          command: |
+            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 633011985446.dkr.ecr.us-east-2.amazonaws.com
+
+      # Tag the Docker image for ECR
+      - run:
+          name: Tag Docker Image for ECR
+          command: |
+            docker tag kushcapstone:${CIRCLE_WORKFLOW_ID:0:7} 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
+            docker tag kushcapstone:${CIRCLE_WORKFLOW_ID:0:7} 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:latest
+
+      # Push the Docker image to ECR
+      - run:
+          name: Push Docker Image to ECR
+          command: |
+            docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
+            docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:latest
+
 workflows:
   default:
     jobs:
       - build_app
-      - build_docker_image:
+      - build_and_push_docker_image_to_ecr:
           requires:
             - build_app
