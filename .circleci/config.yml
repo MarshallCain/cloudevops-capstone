@@ -48,10 +48,9 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: List Files
-          command: |
-            ls -la 
+      # Setup remote Docker environment
+      - setup_remote_docker:
+          docker_layer_caching: true
       # Build Docker Image
       - run:
           name: Build Docker Image
