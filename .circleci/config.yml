@@ -129,9 +129,15 @@ jobs:
           command: |
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 633011985446.dkr.ecr.us-east-2.amazonaws.com
 
+      # Connect Kubectl to EKS cluster
+      - run:
+          name: Connect to EKS cluster
+          command: |
+            aws eks update-kubeconfig --region ${AWS_DEFAULT_REGION} --name kush-capstone-cluster
+
       # Deploy latest App
       - run:
-          name: Deploy Latest App
+          name: Deploy Latest App Image
           command: |
             sleep 5
             kubectl set image -n kush-app-ns deployments/kush-capstone-deployment kushcapstone-app=633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
