@@ -32,14 +32,14 @@
 
     - name: Check if cluster already exists
       shell: |
-        eksctl get cluster -n kush-capstone-cluster --region {{ aws_region }}
+        eksctl get cluster --name kush-capstone-cluster --region {{ aws_region }}
       register: cluster_info
       ignore_errors: yes
       changed_when: false
 
     - name: Create EKS cluster if it does not exist
       shell: |
-        eksctl create cluster ---name kush-capstone-cluster --region {{ aws_region }}
+        eksctl create cluster --name kush-capstone-cluster --region {{ aws_region }}
       when: cluster_info.rc != 0
 
     - name: Configure kubectl to EKS cluster
