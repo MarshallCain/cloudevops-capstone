@@ -1,0 +1,25 @@
+---
+- name: Install EKSCTL and Create EKS Cluster
+  hosts: localhost
+  gather_facts: false
+  become: yes
+
+  tasks:
+    - name: Install eksctl
+      command: |
+        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz"
+        tar -xzf eksctl_$(uname -s)_amd64.tar.gz -C /tmp && rm eksctl_$(uname -s)_amd64.tar.gz
+        sudo mv /tmp/eksctl /usr/local/bin
+
+    - name: Install kubectl
+      command: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    
+    - name: Check eksctl version
+      command: |
+        eksctl version
+
+    - name: Check kubectl version
+      command: |
+        kubectl version

@@ -93,10 +93,36 @@ jobs:
             docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
             docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:latest
 
+  create_and_configure_eks_cluster:
+    docker:
+      - image: cimg/python:3.10.12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Install AWS CLI
+      - run:
+          name: Install AWS CLI v2
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      # Install Ansible
+      - run:
+          name: Install Ansible
+          command: |
+            pip install ansible
+
+      # Create EKS Cluster
+      - run:
+          name: Create EKS cluster
+          command: ansible-playbook ansible/configure_eks_cluster.yaml
+
 workflows:
   default:
     jobs:
-      - build_app
-      - build_and_push_docker_image_to_ecr:
-          requires:
-            - build_app
+#      - build_app
+#      - build_and_push_docker_image_to_ecr:
+#         requires:
+#            - build_app
+       - create_and_configure_eks_cluster
