@@ -23,4 +23,4 @@
 
     - name: Check kubectl version
       shell: |
-        kubectl version
+        kubectl version --client=true

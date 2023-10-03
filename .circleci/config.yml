@@ -116,7 +116,7 @@ jobs:
       # Create EKS Cluster
       - run:
           name: Create EKS cluster
-          command: ansible-playbook ansible/configure_eks_cluster.yaml
+          command: ansible-playbook -vv ansible/configure_eks_cluster.yaml
 
 workflows:
   default:
