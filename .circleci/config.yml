@@ -126,8 +126,10 @@ jobs:
 workflows:
   default:
     jobs:
-#      - build_app
-#      - build_and_push_docker_image_to_ecr:
-#         requires:
-#            - build_app
-       - deploy_to_eks_cluster
+      - build_app
+      - build_and_push_docker_image_to_ecr:
+         requires:
+            - build_app
+      - deploy_to_eks_cluster:
+         requires:
+            - build_and_push_docker_image_to_ecr
