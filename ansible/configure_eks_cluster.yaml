@@ -58,6 +58,14 @@
       shell: |
         kubectl get svc
 
+    - name: Check if namespace already exists
+      shell: |
+        kubectl get namespace kush-app-ns
+      register: namespace_info
+      ignore_errors: yes
+      changed_when: false
+
     - name: Create Namespace
       shell: |
         kubectl create namespace kush-app-ns
+      when: namespace_info.rc != 0
