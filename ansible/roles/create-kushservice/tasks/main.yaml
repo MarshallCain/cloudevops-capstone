@@ -1,3 +1,10 @@
 ---
-- name: Apply deployment configuration
+- name: Copy service configuration
+  copy:
+    src: "create_service_k8.yaml"
+    dest: /tmp
+
+- name: Apply service configuration
   shell: "kubectl apply -f create_service_k8.yaml"
+  args:
+    chdir: /tmp
