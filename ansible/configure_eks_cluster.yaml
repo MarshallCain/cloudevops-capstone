@@ -1,10 +1,15 @@
 ---
-- name: Install EKSCTL and Create EKS Cluster
+- name: Deploy ECR image to an EKS Cluster
   hosts: localhost
   gather_facts: false
   become: yes
 
   tasks:
+    - name: Fetch AWS region from environment variable
+      set_fact:
+        aws_region: "{{ lookup('env', 'AWS_DEFAULT_REGION') }}"
+      when: lookup('env', 'AWS_DEFAULT_REGION') is defined
+
     - name: Install eksctl
       shell: |
         curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz"
@@ -24,3 +29,23 @@
     - name: Check kubectl version
       shell: |
         kubectl version --client=true
+
+    - name: Check if cluster already exists
+      shell: |
+        eksctl get cluster -n kush-capstone-cluster --region {{ aws_region }} --json
+      register: cluster_info
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Create EKS cluster if it does not exist
+      shell: |
+        eksctl create cluster -f ../cluster_k8.yaml --region {{ aws_region }}
+      when: cluster_info.rc != 0
+
+    - name: Configure kubectl to EKS cluster
+      shell: |
+        aws eks update-kubeconfig --region {{ aws_region }} --name kush-capstone-cluster
+
+    - name: Check Kubectl configuration
+      shell: |
+        kubectl get svc
