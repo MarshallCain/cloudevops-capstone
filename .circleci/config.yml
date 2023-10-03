@@ -123,6 +123,12 @@ jobs:
           name: Deploy ECR image to EKS Cluster
           command: ansible-playbook -vv ansible/deploy_image_to_cluster.yaml
 
+      # Authenticate Docker with AWS ECR
+      - run:
+          name: Authenticate with ECR
+          command: |
+            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 633011985446.dkr.ecr.us-east-2.amazonaws.com
+
       # Deploy latest App
       - run:
           name: Deploy Latest App
