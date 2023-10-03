@@ -93,7 +93,7 @@ jobs:
             docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
             docker push 633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:latest
 
-  create_and_configure_eks_cluster:
+  deploy_to_eks_cluster:
     docker:
       - image: cimg/python:3.10.12
     working_directory: ~/repo
@@ -113,10 +113,15 @@ jobs:
           command: |
             pip install ansible
 
-      # Create EKS Cluster and deplopy image to it
+      # Configure EKS Cluster
       - run:
-          name: Deploy to cluster
+          name: Configure EKS Cluster
           command: ansible-playbook -vv ansible/configure_eks_cluster.yaml
+
+      # Deploy to EKS Cluster
+      - run:
+          name: Deploy ECR image to EKS Cluster
+          command: ansible-playbook -vv ansible/deploy_image_to_cluster.yaml
 
 workflows:
   default:
@@ -125,4 +130,4 @@ workflows:
 #      - build_and_push_docker_image_to_ecr:
 #         requires:
 #            - build_app
-       - create_and_configure_eks_cluster
+       - deploy_to_eks_cluster

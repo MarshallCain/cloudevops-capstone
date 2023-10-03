@@ -1,5 +1,5 @@
 ---
-- name: Deploy ECR image to an EKS Cluster
+- name: Configure EKS Cluster
   hosts: localhost
   gather_facts: false
   become: yes
@@ -57,3 +57,7 @@
     - name: Check Kubectl configuration
       shell: |
         kubectl get svc
+
+    - name: Create Namespace
+      shell: |
+        kubectl create namespace kush-app-ns

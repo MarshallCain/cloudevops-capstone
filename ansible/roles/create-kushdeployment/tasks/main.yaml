@@ -1,0 +1,3 @@
+---
+- name: Apply deployment configuration
+  shell: "kubectl apply -f create_deployment_k8.yaml"

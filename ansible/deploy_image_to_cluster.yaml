@@ -1,0 +1,8 @@
+---
+- name: Configure EKS Cluster
+  hosts: localhost
+  gather_facts: false
+  become: yes
+  roles:
+    - create-kushdeployment
+    - create-kushservice
