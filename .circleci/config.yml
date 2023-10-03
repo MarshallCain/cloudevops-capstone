@@ -113,9 +113,9 @@ jobs:
           command: |
             pip install ansible
 
-      # Create EKS Cluster
+      # Create EKS Cluster and deplopy image to it
       - run:
-          name: Create EKS cluster
+          name: Deploy to cluster
           command: ansible-playbook -vv ansible/configure_eks_cluster.yaml
 
 workflows:
