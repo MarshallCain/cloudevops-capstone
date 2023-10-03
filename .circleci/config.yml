@@ -127,6 +127,7 @@ jobs:
       - run:
           name: Deploy Latest App
           command: |
+            sleep 5
             kubectl set image -n kush-app-ns deployments/kush-capstone-deployment kushcapstone-app=633011985446.dkr.ecr.us-east-2.amazonaws.com/kushcapstone:${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
