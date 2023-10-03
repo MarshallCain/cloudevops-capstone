@@ -1,0 +1,8 @@
+#1 Git Hub Repo Link 
+https://github.com/MarshallCain/cloudevops-capstone
+
+#2 Public DNS Link for App
+http://ad230d5dc86604e8e866fb00250de8db-1733615351.us-east-2.elb.amazonaws.com/
+
+#3 ECR Repository for Storing Images
+https://us-east-2.console.aws.amazon.com/ecr/repositories/private/633011985446/kushcapstone?region=us-east-2
