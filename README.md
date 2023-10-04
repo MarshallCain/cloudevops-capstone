@@ -19,7 +19,7 @@ In this project I have taken a simple website. Then using the flask framework li
 
 - An AWS EKS named "kush-capstone-cluster" needs to be created beforehand in order for this project to work with help of eksctl.
 - Python 3.10.12
-- Linux OS only
+- Linux OS Ubuntu 22.04 
 
 ---
 
